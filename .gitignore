@@ -1,5 +1,5 @@
-./crypto_etl/stone*.json
-./crypto_etl/src/tests/*
+crypto_etl/stone*.json
+crypto_etl/tests/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
