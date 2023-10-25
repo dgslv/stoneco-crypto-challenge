@@ -73,7 +73,7 @@ class StoneCryptoJob(Job):
         try:
             file_name = f'{floor_dt.strftime("%Y-%m-%d-%H-%M-%S")}_{file_uuid}'
             file_name = f'{STORAGE_PATH}/{file_name}.csv'
-            logger.info(f"Salvando arquivo {file_name}.csv")
+            logger.info(f"Salvando arquivo {file_name}")
             data.to_csv(file_name, index=False, header=False)
             return file_name
         except Exception as e:
