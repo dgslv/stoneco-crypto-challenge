@@ -45,7 +45,6 @@ class StoneCryptoJob(Job):
                     current_iteration * query_limit
             )
         
-        logger.info(query_string)
         return self.client.execute_query(query_string)
     
     def preprocess(self, df):
@@ -130,7 +129,6 @@ class StoneCryptoJob(Job):
 
             
             if data.shape[0] < 100 or data.shape[0] == 0:
-                logger.info("caiu aqui")
                 return 1
             else:
                 current_iteration += 1        
