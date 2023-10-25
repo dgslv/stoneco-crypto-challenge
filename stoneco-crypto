@@ -1,0 +1,88 @@
+LOCAL_RUNNER="aws-mwaa-local-runner"
+
+deploy_postgres() {
+    helm install \
+        postgres \
+        oci://registry-1.docker.io/bitnamicharts/postgresql \
+        -f postgres_values.yaml \
+        --namespace postgres \
+        --create-namespace
+}
+
+build_project() {
+    docker build -t stone -f ./crypto_etl/Dockerfile ./crypto_etl/
+}
+
+
+reset_airflow() {
+    cd $LOCAL_RUNNER
+    ./mwaa-local-env reset-db
+}
+
+reset_postgres() {
+    kubectl delete ns postgres
+}
+
+destroy() {
+    reset_airflow
+    reset_postgres
+}
+
+setup() {
+    source ./crypto_etl/.env
+    
+    echo "======================================" 
+    echo "       Setting up Postgres...         " 
+    echo "======================================" 
+
+    deploy_postgres 
+
+    echo "======================================" 
+    echo "       Postgres Setup Finished        " 
+    echo "======================================" 
+
+    echo "======================================" 
+    echo "           Building Project           " 
+    echo "======================================" 
+
+    build_project
+
+    echo "======================================" 
+    echo "      Project Successfully Built      " 
+    echo "======================================" 
+
+    echo "======================================" 
+    echo "           Setting Up Mwaa...         " 
+    echo "======================================" 
+
+    cd $LOCAL_RUNNER
+    ./mwaa-local-env build-image
+
+    echo "======================================" 
+    echo "            Setup Finished            " 
+    echo "======================================"
+}
+
+start() {
+    source ./crypto_etl/.env
+    echo $GCP_CREDENTIALS_PATH
+    cd $LOCAL_RUNNER
+    ./mwaa-local-env start
+}
+
+case "$1" in
+setup)
+    setup
+    ;;
+destroy)
+    destroy
+    ;;
+build-project)
+    build_project
+    ;;
+start)
+    start
+    ;;
+*)
+esac
+

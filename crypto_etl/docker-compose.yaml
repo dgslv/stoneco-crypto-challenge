@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  crypto:
+    image: stone
+    build:
+      context: .
+    volumes:
+      - ./src:/app/src/
+    environment:
+      - POSTGRES_DB=$POSTGRES_DB
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASS=$POSTGRES_PASS
+      - POSTGRES_HOST=$POSTGRES_HOST
+      - POSTGRES_PORT=$POSTGRES_PORT
+      - GCP_CREDENTIALS_PATH=$GCP_CREDENTIALS_PATH
+      - CRIPTO_ETL_RECORD_LIMIT=$CRIPTO_ETL_RECORD_LIMIT
